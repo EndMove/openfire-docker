@@ -29,6 +29,11 @@ RUN apt-get -y update \
 COPY ["copyright", "LICENSE", "entrypoint.sh", "/usr/local/bin/"]
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
+# create ssl folder
+RUN mkdir /usr/share/openfire/ssl; \
+  chmod -R 0750 /usr/share/openfire/ssl; \
+  chown -R ${OPENFIRE_USER}:${OPENFIRE_USER} /usr/share/openfire/ssl
+
 # expose ports
 EXPOSE 5222/tcp 5223/tcp 5229/tcp 5262/tcp 5263/tcp 5269/tcp 5270/tcp 5275/tcp 5276/tcp 7070/tcp 7443/tcp 7777/tcp 9090/tcp 9091/tcp
 

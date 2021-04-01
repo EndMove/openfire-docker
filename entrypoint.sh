@@ -36,6 +36,15 @@ initialization() {
   chmod -R 0755 ${OPENFIRE_LOG_DIR}
   chown -R ${OPENFIRE_USER}:${OPENFIRE_USER} ${OPENFIRE_LOG_DIR}
 
+  # manage certificate if available
+  if [ -e /usr/share/openfire/ssl/ssl.pem ]; then
+    [ -e ${OPENFIRE_DATA_DIR}/conf/security/keystore ] && rm -f ${OPENFIRE_DATA_DIR}/conf/security/keystore
+    [ -e ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem ] && rm -f ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem
+    cp -f /usr/share/openfire/ssl/ssl.pem ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem
+    cd ${OPENFIRE_DATA_DIR}/conf/security/
+    printf "changeit\nchangeit\nyes" | keytool -import -v -keystore keystore -alias openfire-docker -file ssl-tmp.pem
+  fi
+
   # create build version file and update it
   CURRENT_VERSION=1.0.0
   [ -f ${OPENFIRE_DATA_DIR}/openfire_version ] && CURRENT_VERSION=$(cat ${OPENFIRE_DATA_DIR}/openfire_version)
