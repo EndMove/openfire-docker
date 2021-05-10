@@ -5,10 +5,11 @@ FROM ubuntu:18.04
 MAINTAINER endmove "contact@endmove.eu"
 
 # vars
-ENV OPENFIRE_VERSION=4.6.2 \
+ENV OPENFIRE_VERSION=4.6.3 \
   OPENFIRE_USER=openfire \
   OPENFIRE_DATA_DIR=/var/lib/openfire \
-  OPENFIRE_LOG_DIR=/var/log/openfire
+  OPENFIRE_LOG_DIR=/var/log/openfire \
+  OPENFIRE_CPNT_DIR=/usr/local/bin/openfire
 
 # creat a new group and user
 RUN groupadd -r ${OPENFIRE_USER}; \
@@ -26,8 +27,11 @@ RUN apt-get -y update \
   && rm -rf /var/lib/apt/lists/*
 
 # make a copy of files to /sbin
-COPY ["copyright", "LICENSE", "entrypoint.sh", "/usr/local/bin/"]
-RUN chmod 755 /usr/local/bin/entrypoint.sh
+COPY ["copyright", "LICENSE", "entrypoint.sh", "${OPENFIRE_CPNT_DIR}/"]
+RUN chmod 755 ${OPENFIRE_CPNT_DIR}/entrypoint.sh
+
+# make a copy of all components
+COPY components/ ${OPENFIRE_CPNT_DIR}/
 
 # create ssl folder
 RUN mkdir /usr/share/openfire/ssl; \
@@ -39,4 +43,4 @@ EXPOSE 5222/tcp 5223/tcp 5229/tcp 5262/tcp 5263/tcp 5269/tcp 5270/tcp 5275/tcp 5
 
 # volume & entrypoint
 VOLUME ${OPENFIRE_DATA_DIR}
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/openfire/entrypoint.sh"]

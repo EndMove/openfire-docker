@@ -1,6 +1,6 @@
 # openfire-docker
 
-__Openfire version__: _`4.6.2`_
+__Openfire version__: _`4.6.3`_
 
 ![GitHub license](https://img.shields.io/badge/license-MIT-%23fe7d37) ![GitHub last commit](https://img.shields.io/github/last-commit/EndMove/openfire-docker)
 
@@ -112,7 +112,7 @@ This Openfire installation script provides two important volume locations to tra
 --volume /home/openfire/log:/var/log/openfire
 ````
 
-### Openfire - SSL Certificate
+### Openfire - SSL Certificate **(Doesn't work)**
 
 > To benefit from the SSL certificate of your server under Openfire place it under the name `ssl.pem` in this volume.
 > Note: all communications between Openfire and users except those from the web interface ports: 9091 & 9090 are managed and encrypted using RSA, by Openfire automatically.
@@ -125,7 +125,7 @@ This Openfire installation script provides two important volume locations to tra
 --volume /home/certificate/cert:/usr/share/openfire/ssl:ro
 ````
 
-Ceci est un exemple du contenu du dossier `/home/certificate/cert`
+This is an example of the contents of the file `/home/certificate/cert`
 
 ````txt
 .
@@ -143,4 +143,5 @@ __WARNING__: this requires that you store the Openfire data as recommended above
 - [x] Log file available out of container.
 - [x] Configuration file, security and embedded-database available out of the container.
 - [x] Makes available all the ports available in Openfire version 4.6.2.
-- [x] Allows the import of SSL certificates that are external to the container.
+- [x] Includes certificate manager plugin with hotdeploy.
+- [ ] Allows the import of SSL certificates that are external to the container.

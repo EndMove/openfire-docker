@@ -36,14 +36,20 @@ initialization() {
   chmod -R 0755 ${OPENFIRE_LOG_DIR}
   chown -R ${OPENFIRE_USER}:${OPENFIRE_USER} ${OPENFIRE_LOG_DIR}
 
-  # manage certificate if available
-  if [ -e /usr/share/openfire/ssl/ssl.pem ]; then
-    [ -e ${OPENFIRE_DATA_DIR}/conf/security/keystore ] && rm -f ${OPENFIRE_DATA_DIR}/conf/security/keystore
-    [ -e ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem ] && rm -f ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem
-    cp -f /usr/share/openfire/ssl/ssl.pem ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem
-    cd ${OPENFIRE_DATA_DIR}/conf/security/
-    printf "changeit\nchangeit\nyes" | keytool -import -v -keystore keystore -alias openfire-docker -file ssl-tmp.pem
-  fi
+  # make a copy of all components and create folder of them
+  [ ! -e ${OPENFIRE_DATA_DIR}/plugins/certificatemanager.jar ] && cp -rf ${OPENFIRE_CPNT_DIR}/plugins/certificatemanager.jar ${OPENFIRE_DATA_DIR}/plugins/certificatemanager.jar
+  mkdir -p ${OPENFIRE_DATA_DIR}/conf/security/hotdeploy
+
+  # manage SSL certificate if available (/!\ Doesn't work)
+  # if [ -e /usr/share/openfire/ssl/ssl.pem ] && [ -e ${OPENFIRE_DATA_DIR}/conf/security/keystore ]; then
+  #   if [ ${OPENFIRE_DATA_DIR}/conf/security/keystore -ot /usr/share/openfire/ssl/ssl.pem ] || [ ! -e ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem ]; then
+  #     [ -e ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem ] && rm -f ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem
+  #     cp -f /usr/share/openfire/ssl/ssl.pem ${OPENFIRE_DATA_DIR}/conf/security/ssl-tmp.pem
+  #     rm -f ${OPENFIRE_DATA_DIR}/conf/security/keystore
+  #     cd ${OPENFIRE_DATA_DIR}/conf/security/
+  #     printf "changeit\nchangeit\nyes" | keytool -import -keystore keystore -alias openfiredomain -file ssl-tmp.pem
+  #   fi
+  # fi
 
   # create build version file and update it
   CURRENT_VERSION=1.0.0
@@ -54,15 +60,15 @@ initialization() {
 
   # creating copyright file & license
   if [ ! -e ${OPENFIRE_DATA_DIR}/copyright ] || [ ! -e ${OPENFIRE_DATA_DIR}/LICENSE ]; then
-    cp /usr/local/bin/copyright ${OPENFIRE_DATA_DIR}/copyright
-    cp /usr/local/bin/LICENSE ${OPENFIRE_DATA_DIR}/LICENSE
+    cp ${OPENFIRE_CPNT_DIR}/copyright ${OPENFIRE_DATA_DIR}/copyright
+    cp ${OPENFIRE_CPNT_DIR}/LICENSE ${OPENFIRE_DATA_DIR}/LICENSE
   fi
 }
 
 # Start-Stop Openfire
 post_initialization() {
   # get the openfire launch arguments
-  if [ ${1:0:1} = '-' ]; then
+  if [ "${1:0:1}" = '-' ]; then
     EXTRA_ARGS="$@"
     set --
   fi
