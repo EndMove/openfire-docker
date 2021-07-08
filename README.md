@@ -1,6 +1,6 @@
 # openfire-docker
 
-__Openfire version__: _`4.6.3`_
+__Openfire version__: _`4.6.4`_
 
 ![GitHub license](https://img.shields.io/badge/license-MIT-%23fe7d37) ![GitHub last commit](https://img.shields.io/github/last-commit/EndMove/openfire-docker)
 
@@ -46,7 +46,7 @@ docker pull endmove/openfire:latest
 - Methode 2 : build from __Github__
 
 ````sh
-docker build -t endmove/openfire github.com/EndMove/openfire-docker
+docker build -t endmove/openfire:latest github.com/EndMove/openfire-docker
 ````
 
 ### _Step Two_
@@ -114,6 +114,8 @@ This Openfire installation script provides two important volume locations to tra
 
 ### Openfire - SSL Certificate **(Doesn't work)**
 
+**[Try to use the 'Certificate Manager Plugin', automatically installed during installation.](https://www.igniterealtime.org/projects/openfire/plugins/1.1.0/certificatemanager/readme.html)**
+
 > To benefit from the SSL certificate of your server under Openfire place it under the name `ssl.pem` in this volume.
 > Note: all communications between Openfire and users except those from the web interface ports: 9091 & 9090 are managed and encrypted using RSA, by Openfire automatically.
 
@@ -144,4 +146,4 @@ __WARNING__: this requires that you store the Openfire data as recommended above
 - [x] Configuration file, security and embedded-database available out of the container.
 - [x] Makes available all the ports available in Openfire version 4.6.2.
 - [x] Includes certificate manager plugin with hotdeploy.
-- [ ] Allows the import of SSL certificates that are external to the container.
+- [x] Allows the import of SSL certificates that are external to the container **(By using certificate manager)**.

@@ -10,7 +10,7 @@ pre_initialization() {
   ln -sf ${OPENFIRE_DATA_DIR}/conf/log4j.xml /usr/share/openfire/lib/
 }
 
-# Initialization of folders, links, ans more
+# Initialization of folders, links, and more
 initialization() {
   # creating main folder & perm & owner
   mkdir -p ${OPENFIRE_DATA_DIR}
